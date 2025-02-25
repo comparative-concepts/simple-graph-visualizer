@@ -12,5 +12,5 @@ How to use:
 - navigate to `graph-visualizer.html` in your favourite browser
 
 Here's how it should look if you don't change anything:
-<https://comparative-concepts.github.io/simple-graph-visualizer/>
+<https://comparative-concepts.github.io/simple-graph-visualizer/graph-visualizer.html>
 
