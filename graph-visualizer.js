@@ -218,7 +218,10 @@ function encodeState(state) {
         const nodes = Object.fromEntries(state.nodes.map((id) => [id, true]));
         const nodeNumbers = DATA.nodes.flatMap((node, n) => node.id in nodes ? n : []);
         nodeNumbers.sort();
-        if (DATA.nodes.length < 2**12 && nodeNumbers.length * 2 < DATA.nodes.length / 6) {
+        if (state.nodes.length === 1) {
+            // If there is only one visible node we store its id verbatim.
+            params.set("id", state.nodes[0]);
+        } else if (DATA.nodes.length < 2**12 && nodeNumbers.length * 2 < DATA.nodes.length / 6) {
             // We encode the list of node numbers instead of the bit array.
             // We need two base64 chars to store each node,
             // this gives 2*6 = 12 bits, so we can handle up to 2^12 = 4096 nodes.
@@ -251,12 +254,15 @@ function decodeState(encoded) {
     const version = (params.get("v") || "").trim();
     const graph = (params.get("g") || "").trim();
     const relations = (params.get("r") || "").split(/ +/);
-    const nodeNumbers = [];
-    if (params.get("n")) {
+    const nodes = [];
+    if (params.get("id")) {
+        nodes.push(params.get("id"));
+    } else if (params.get("n")) {
         // The string encodes the list of node numbers instead of the bit array.
         for (const s of params.get("n").match(/.{2}/g)) {
             const [_, high, low] = fromBase64("AA" + s);
-            nodeNumbers.push(high * 256 + low);
+            const n = high * 256 + low;
+            nodes.push(DATA.nodes[n].id);
         }
     } else if (params.get("h")) {
         // The string encodes the bit array instead of the list of node numbers.
@@ -265,11 +271,10 @@ function decodeState(encoded) {
             for (let n = 0; n < DATA.nodes.length; n++) {
                 const bin = Math.trunc(n / 8);
                 const mask = 1 << (n % 8);
-                if (buffer[bin] & mask) nodeNumbers.push(n);
+                if (buffer[bin] & mask) nodes.push(DATA.nodes[n].id);
             }
         }
     }
-    const nodes = nodeNumbers.map((n) => DATA.nodes[n].id);
     return {version: version, graph: graph, relations: relations, nodes: nodes};
 }
 
