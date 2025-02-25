@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script type="text/javascript" src="graph-data.js"></script>
+<script type="text/javascript" src="graph-settings.js"></script>
+<script type="text/javascript" src="graph-visualizer.js"></script>
+<link rel="stylesheet" href="graph-visualizer.css"/>
+
+<!-- Change title to whatever you seem fit -->
+<title>Simple graph visualizer</title>
+
+</head>
+<body onload="initialize()">
+
+<!-- Change heading to whatever you seem fit -->
+<h1>Visualization of an example network</h1>
+
+<details>
+  <summary>Instructions</summary>
+  <p>What the controls mean:</p>
+  <ul>
+    <li><b>Graph</b>: Here you select one of the different graph types. When you have selected one, you can decide which relations you want to see.</li>
+    <li><b>Show</b>: Should the nodes show the ids or the names of the graph nodes?</li>
+    <li><b>Stabilize</b>: You can turn off the auto-stabilization here, or decide which algorithm it should use.</li>
+    <li><b>Subgraph</b>: Here you can decide if you want to show just a part of the nodes in the graph (together with their relations).</li>
+    <li><b>Selection</b>: Here you can select graph nodes in different ways.</li>
+  </ul>
+  <p>How you can interact with the graph itself:</p>
+  <ul>
+    <li>To zoom in/out, use the mouse scroll wheel or "pinch" on the touchpad.</li>
+    <li>To move the canvas around, click-and-drag the background.</li>
+    <li>To select a node, click on it.</li>
+    <li>To select several nodes (or deselect), click-and-hold just a little while.</li>
+    <li>To unselect all nodes, click on the background (or the button "Clear selection").</li>
+    <li>To move the selected nodes, click-and-drag them.</li>
+    <li>To see more information about a node, hover over it and wait a little while.</li>
+  </ul>
+</details>
+
+<menu>
+  <li><label><b>Graph:</b>
+    <select id="gvGraphType" onchange="selectGraph()">
+      <option value="" selected disabled>Select a graph</option>
+    </select>
+    </label> &nbsp;
+    <span id="gvRelations"></span>
+  </li>
+  <span class="flex-break"></span>
+  <li>
+    <label><b>Show:</b>
+      <select id="gvShow" onchange="changeSettings()">
+        <option value="name" selected>Names</option>
+        <option value="id">IDs</option>
+      </select>
+    </label>
+  </li>
+  <li>
+    <label><b>Stabilize:</b>
+      <input type="checkbox" id="gvStabilize" checked onchange="changeSettings()"/>
+    </label>
+    <select id="gvSolver" onchange="changeSettings()">
+      <option value="forceAtlas2Based" selected>Atlas2</option>
+      <option value="repulsion">Repulsion</option>
+      <option value="barnesHut">Barnes-Hut</option>
+    </select>
+  </li>
+  <li>
+    <b>Subgraph:</b>
+    <button id="gvClearFilter" onclick="clearFilter()">clear</button>
+    &nbsp; grow:
+    <button id="gvGrowUpwards" onclick="revealNeighbors('from')">upwards</button>
+    <button id="gvGrowDownwards" onclick="revealNeighbors('to')">downwards</button>
+    <button id="gvGrowOutwards" onclick="revealNeighbors()">outwards</button>
+    &nbsp; remove:
+    <button id="gvHideUnselected" onclick="hideUnselected()">unselected</button>
+    <button id="gvHideSelected" onclick="hideSelected()">selected</button>
+  </li>
+  <li>
+    <b>Selection:</b>
+    <button id="gvClearSelection" onclick="clearSelection()">clear</button>
+    <button id="gvSelectVisible" onclick="selectVisible()">all visible</button>
+    <button id="gvSelectUnconnected" onclick="selectUnconnected()">unconnected</button>
+    &nbsp; expand:
+    <button id="gvExpandUpwards" onclick="expandSelection('from')">upwards</button>
+    <button id="gvExpandDownwards" onclick="expandSelection('to')">downwards</button>
+    <button id="gvExpandOutwards" onclick="expandSelection()">outwards</button>
+  </li>
+  <li>
+    search:
+    <input type="search" id="gvSearch" size="30" placeholder="Type at least 3 characters" oninput="searchNodes()"/>
+  </li>
+</menu>
+
+<div id="gvContainer">
+  <div id="gvNetwork"></div>
+  <div id="gvSpinningWheel"><div></div></div>
+</div>
+<div id="infoVersion"></div>
+<div id="infoGraph"></div>
+<div id="infoSelected"></div>
+<div id="infoUnconnected"></div>
+
+<footer>
+  <!-- Change this for your needs, but remember to keep the link to the MIT license -->
+  <p><b>Visualization:</b>
+    &copy;2025 <a target="_blank" href="https://github.com/heatherleaf">Peter Ljunglöf</a>,
+    using the graph library
+    <a target="_blank" href="https://visjs.github.io/vis-network/docs/network/">Vis-Network</a>.
+    Licensed under the <a href="LICENCE">MIT license</a>,
+    download the <a href="https://github.com/comparative-concepts/simple-graph-visualizer">source here</a>.</p>
+</footer>
+</body>
+</html>
