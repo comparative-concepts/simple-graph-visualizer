@@ -114,7 +114,7 @@ function getGraphRelations() {
     return relations;
 }
 
-function setGraphData(nodeIds, rememberState = true) {
+function setGraphData(nodeIds, rememberState = true, forceRemember = false) {
     if (nodeIds?.length > 0) {
         nodeIds = Object.fromEntries(nodeIds.map(n => [n, true]));
     } else {
@@ -141,7 +141,7 @@ function setGraphData(nodeIds, rememberState = true) {
         network.selectNodes(selected);
         selectionChanged();
         // The default is to remember the new state in the browser history
-        if (rememberState) pushCurrentState();
+        if (rememberState) pushCurrentState(forceRemember);
         // Remove the spinning wheel 0.5 seconds after the network is loaded
         setTimeout(() => {spinner.style.display = "none"}, 500);
     }, 10);
@@ -154,16 +154,15 @@ function setGraphData(nodeIds, rememberState = true) {
 // Initialise the browser history, and the load graph specified in the URL hash
 function initHistory() {
     window.addEventListener("popstate", (event) => {
-        updateGraphFromState(event.state);
+        updateGraphFromState(event.state, false);
     });
     const url = new URL(window.location.href);
     try {
-        updateGraphFromState(decodeState(url.hash));
+        updateGraphFromState(decodeState(url.hash), true);
     } catch (err) {
         alert(`Malformed state in URL!\n${err}`);
         selectGraph();
     }
-    pushCurrentState(true);
 }
 
 // Remember the current graph in the browser history, and the URL hash
@@ -177,7 +176,7 @@ function pushCurrentState(force = false) {
 }
 
 // Load the graph specified in a given state
-function updateGraphFromState(state) {
+function updateGraphFromState(state, rememberState = true) {
     if (!state) return;
     if (state.version && state.version !== DATA.version) {
         throw new TypeError(`Wrong database version: ${state.version}`);
@@ -190,13 +189,15 @@ function updateGraphFromState(state) {
         document.getElementById(rel).checked = state.relations.includes(rel);
     }
     updateGraph();
-    const possibleNodeIds = getGraphNodeIds();
-    for (const nodeId of state.nodes) {
-        if (!(nodeId in possibleNodeIds))
-            throw new TypeError(`Node ${nodeId} is not in graph ${state.graph}`);
+    if (state.nodes?.length > 0) {
+        const possibleNodeIds = getGraphNodeIds();
+        for (const nodeId of state.nodes) {
+            if (!(nodeId in possibleNodeIds))
+                throw new TypeError(`Node ${nodeId} is not in graph ${state.graph}`);
+        }
     }
     // Set the graph, but make sure not to push the state to the browser history
-    setGraphData(state.nodes, false);
+    setGraphData(state.nodes, rememberState, true);
 }
 
 // Get the current state of the graph
