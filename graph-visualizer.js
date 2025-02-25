@@ -243,7 +243,7 @@ function encodeState(state) {
             params.set("h", toBase64(buffer));
         }
     }
-    return params.toString();
+    return dontPercentEncodeSafeChars(params.toString());
 }
 
 // Decode a URL query/hash string into a graph state
@@ -289,6 +289,15 @@ function toBase64(buffer) {
 function fromBase64(encoded) {
     const base64 = encoded.replaceAll("-", "+").replaceAll("_", "/");
     return Uint8Array.from(atob(base64), (c) => c.charCodeAt());
+}
+
+// Don't percent encode some safe characters
+function dontPercentEncodeSafeChars(query) {
+    const okQueryChars = ":;,/!@()";
+    for (const ch of okQueryChars) {
+        query = query.replaceAll(encodeURIComponent(ch), ch);
+    }
+    return query;
 }
 
 
