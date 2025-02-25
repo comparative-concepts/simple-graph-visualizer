@@ -404,9 +404,10 @@ function showStatistics() {
         const infoNode = document.getElementById("info" + title);
         if (nodes === selected && nodes.length === 1) {
             const node = nodes[0];
+            const infoAttr = SETTINGS?.general?.info?.attribute;
             infoNode.innerHTML = mkElem("p",
                 mkElem("b", linkToNodeInfo(node, `${node.name} (${node.type})`), ": "),
-                removeLinks(node.info) || "[no information]",
+                removeLinks(node[infoAttr]) || SETTINGS?.general?.info?.unkonwn || "",
             );
         } else if (nodes.length > 0) {
             infoNode.innerHTML = mkElem("p",
@@ -449,10 +450,11 @@ function updateNodes() {
 
         // This is what is shown when you hover over a node
         n.title = document.createElement("div");
+        const infoAttr = SETTINGS?.general?.info?.attribute;
         n.title.innerHTML = mkElem("span",
             mkElem("b", `${n.name} (${n.type})`),
             "<br/>",
-            removeLinks(n.info) || "[no information]",
+            removeLinks(n[infoAttr]) || SETTINGS?.general?.info?.unkonwn || "",
         );
     }
 }
@@ -610,17 +612,19 @@ function mkElem(elem, attrs, ...content) {
 }
 
 function linkToNodeInfo(node, ...content) {
-    if (!node.link) {
+    const linkAttr = SETTINGS?.general?.links?.attribute;
+    if (!node[linkAttr]) {
         return mkElem("span", ...content);
     }
     const attrs = {
-        href: (SETTINGS?.general?.links?.baseURL || "") + node.link,
+        href: (SETTINGS?.general?.links?.baseURL || "") + node[linkAttr],
         target: SETTINGS?.general?.links?.target || "_blank",
     };
     return mkElem("a", attrs, ...content);
 }
 
 function removeLinks(html) {
+    if (!html) return "";
     return html.replaceAll(/<a [^<>]+>|<\/a>/g, "");
 }
 

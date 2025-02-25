@@ -46,7 +46,12 @@ SETTINGS.graphs = {
 
 // General settings
 SETTINGS.general = {
+    info: {
+        attribute: "info",            // which attribute in DATA.nodes contains the on-hover information?
+        unkonwn: "[no information]",  // info to show if missing
+    },
     links: {
+        attribute: "link",            // which attribute in DATA.nodes contains the outgoing link?
         baseURL: "https://en.wikipedia.org/wiki/",
         target: "entity-information",
     },
