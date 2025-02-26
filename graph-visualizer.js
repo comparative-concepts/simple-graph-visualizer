@@ -156,9 +156,17 @@ function initHistory() {
     window.addEventListener("popstate", (event) => {
         updateGraphFromState(event.state, false);
     });
+    window.addEventListener("hashchange", () => {
+        reloadGraph(false);
+    })
+    reloadGraph(true);
+}
+
+// (Re)load the graph from the state in the URL
+function reloadGraph(rememberState) {
     const url = new URL(window.location.href);
     try {
-        updateGraphFromState(decodeState(url.hash), true);
+        updateGraphFromState(decodeState(url.hash), rememberState);
     } catch (err) {
         alert(`Malformed state in URL!\n${err}`);
         selectGraph();
@@ -176,8 +184,11 @@ function pushCurrentState(force = false) {
 }
 
 // Load the graph specified in a given state
-function updateGraphFromState(state, rememberState = true) {
-    if (!state) return;
+function updateGraphFromState(state, rememberState) {
+    if (!state) {
+        clearFilter();
+        return;
+    }
     if (state.version && state.version !== DATA.version) {
         throw new TypeError(`Wrong database version: ${state.version}`);
     }
