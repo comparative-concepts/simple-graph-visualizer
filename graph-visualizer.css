@@ -57,6 +57,7 @@ select:hover, input:hover, label:hover, button:hover, summary:hover {
 #gvContainer div.vis-tooltip {
     max-width: 50%;
     text-wrap: wrap;
+    font-family: sans-serif;
     font-size: 0.8rem;
     border-radius: 10px;
 }
