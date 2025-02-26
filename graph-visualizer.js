@@ -185,10 +185,7 @@ function pushCurrentState(force = false) {
 
 // Load the graph specified in a given state
 function updateGraphFromState(state, rememberState) {
-    if (!state) {
-        clearFilter();
-        return;
-    }
+    if (!state) return;
     if (state.version && state.version !== DATA.version) {
         throw new TypeError(`Wrong database version: ${state.version}`);
     }
