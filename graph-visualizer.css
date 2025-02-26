@@ -1,6 +1,6 @@
 
 body {
-    background-color: aliceblue;
+    background-color: linen;
     margin: 1.5rem;
     font-family: sans-serif;
 }
@@ -14,7 +14,7 @@ h1 {
 }
 
 a {
-    color: blue;
+    color: saddlebrown;
 }
 
 menu {
@@ -101,8 +101,8 @@ footer {
 }
 
 #gvSpinningWheel > div {
-    border: 16px solid aliceblue;
-    border-top-color: lightskyblue;
+    border: 16px solid linen;
+    border-top-color: peru;
     border-radius: 50%;
     width: 80px;
     height: 80px;
