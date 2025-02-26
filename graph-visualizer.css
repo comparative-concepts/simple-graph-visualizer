@@ -2,16 +2,11 @@
 body {
     background-color: aliceblue;
     margin: 1.5rem;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 300; /* light (falls back to normal=400 if light isn't available */
+    font-family: sans-serif;
 }
 
 h1, h2, h3, p, menu, details {
     margin: 0.75rem 0;
-}
-
-h1, h2, h3, b, strong, summary {
-    font-weight: 550; /* medium (falls back to bold=700 if medium isn't available) */
 }
 
 h1 {
@@ -19,7 +14,7 @@ h1 {
 }
 
 a {
-    color: darkgreen;
+    color: blue;
 }
 
 menu {
@@ -62,7 +57,6 @@ select:hover, input:hover, label:hover, button:hover, summary:hover {
 #gvContainer div.vis-tooltip {
     max-width: 50%;
     text-wrap: wrap;
-    font-family: "Helvetica Neue", Helvetica, Tahomas, Arial, sans-serif;
     font-size: 0.8rem;
     border-radius: 10px;
 }
