@@ -224,29 +224,31 @@ function encodeState(state) {
     params.set("r", state.relations.join(" "));
     if (state.nodes?.length > 0) {
         const nodes = Object.fromEntries(state.nodes.map((id) => [id, true]));
-        const nodeNumbers = DATA.nodes.flatMap((node, n) => node.id in nodes ? n : []);
-        nodeNumbers.sort();
         if (state.nodes.length === 1) {
             // If there is only one visible node we store its id verbatim.
             params.set("id", state.nodes[0]);
-        } else if (DATA.nodes.length < 2**12 && nodeNumbers.length * 2 < DATA.nodes.length / 6) {
+        } else if (DATA.nodes.length < 2**12 && state.nodes.length * 2 < DATA.nodes.length / 6) {
             // We encode the list of node numbers instead of the bit array.
             // We need two base64 chars to store each node,
             // this gives 2*6 = 12 bits, so we can handle up to 2^12 = 4096 nodes.
             const buffer = [];
-            for (const n of nodeNumbers) {
-                const base64 = toBase64([0, Math.trunc(n / 256), n % 256]);
-                buffer.push(base64.substring(2));
+            for (let n = 0; n < DATA.nodes.length; n++) {
+                if (DATA.nodes[n].id in nodes) {
+                    const base64 = toBase64([0, Math.trunc(n / 256), n % 256]);
+                    buffer.push(base64.substring(2));
+                }
             }
             params.set("n", buffer.join(""));
         } else {
             // We encode the bit array instead of the node numbers.
             // We can store 6 bits in each base64 char.
             const buffer = new Uint8Array(Math.ceil(DATA.nodes.length / 8));
-            for (const n of nodeNumbers) {
-                const bin = Math.trunc(n / 8);
-                const mask = 1 << (n % 8);
-                buffer[bin] |= mask;
+            for (let n = 0; n < DATA.nodes.length; n++) {
+                if (DATA.nodes[n].id in nodes) {
+                    const bin = Math.trunc(n / 8);
+                    const mask = 1 << (n % 8);
+                    buffer[bin] |= mask;
+                }
             }
             params.set("h", toBase64(buffer));
         }
