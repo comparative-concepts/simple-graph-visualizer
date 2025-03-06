@@ -55,7 +55,7 @@ SETTINGS.general = {
         baseURL: "https://en.wikipedia.org/wiki/",
         target: "entity-information",
     },
-}
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////
