@@ -317,6 +317,7 @@ function dontPercentEncodeSafeChars(query) {
 // Initialisation
 
 function initialize() {
+    const startTime = new Date().getTime();
     // Hide the graph loader (spinning wheel) from the start
     document.getElementById("gvSpinningWheel").style.display = "none";
     initGraphData();
@@ -362,6 +363,7 @@ function initialize() {
 
     selectionChanged();
     initHistory();
+    console.log(`Finished initialization in ${elapsedTime/1000} s`);
 }
 
 function initGraphData() {
@@ -434,7 +436,7 @@ function showStatistics() {
             const infoAttr = SETTINGS?.general?.info?.attribute;
             infoNode.innerHTML = mkElem("p",
                 mkElem("b", linkToNodeInfo(node, `${node.name} (${node.type})`), ": "),
-                removeLinks(node[infoAttr]) || SETTINGS?.general?.info?.unkonwn || "",
+                removeLinks(node[infoAttr]) || SETTINGS?.general?.info?.unknown || "",
             );
         } else if (nodes.length > 0) {
             infoNode.innerHTML = mkElem("p",
@@ -481,7 +483,7 @@ function updateNodes() {
         n.title.innerHTML = mkElem("span",
             mkElem("b", `${n.name} (${n.type})`),
             "<br/>",
-            removeLinks(n[infoAttr]) || SETTINGS?.general?.info?.unkonwn || "",
+            removeLinks(n[infoAttr]) || SETTINGS?.general?.info?.unknown || "",
         );
     }
 }
