@@ -363,6 +363,7 @@ function initialize() {
 
     selectionChanged();
     initHistory();
+    const elapsedTime = new Date().getTime() - startTime;
     console.log(`Finished initialization in ${elapsedTime/1000} s`);
 }
 
