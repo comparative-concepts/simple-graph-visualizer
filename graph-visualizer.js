@@ -477,6 +477,7 @@ function updateNodes() {
         const color = SETTINGS.nodes[n.type].color;
         const border = SETTINGS.nodes[n.type].border || color;
         n.color = {background: color, border: border};
+        n.font = SETTINGS.nodes[n.type].font;
 
         // This is what is shown when you hover over a node
         n.title = document.createElement("div");
